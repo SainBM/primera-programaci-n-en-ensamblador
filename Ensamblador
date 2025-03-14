@@ -1,0 +1,41 @@
+# ; vs 1.0.0
+
+JMP boot
+
+stackTop    EQU 0xFF    
+txtDisplay  EQU 0x2E0
+
+hello:      DB "Primera programación ensamblador"  
+            DB 0                
+
+boot:
+    MOV SP, stackTop    
+    MOV C, hello        
+    MOV D, txtDisplay   
+    CALL print
+    HLT                
+
+print:              
+    PUSH A
+.loop:
+    MOVB AL, [C]         
+    CMPB AL, 0            
+    JZ .done
+    MOVB [D], AL         
+    INC C
+    INC D
+    CALL delay            
+    JMP .loop
+.done:
+    POP A
+    RET                
+
+; Retardo más corto para evitar bloqueos
+delay:
+    PUSH C
+    MOV C, 0x0050         
+.delayLoop:
+    DEC C
+    JNZ .delayLoop
+    POP C
+    RET
