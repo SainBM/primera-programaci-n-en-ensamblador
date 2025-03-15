@@ -1,4 +1,7 @@
 ;#VS 1.01
+;Hecho por el equipos CSGO (Christian, Sain, Gerardo, Oswaldo).
+;Terminado el 14/03/2025
+
 JMP boot
 
 stackTop    EQU 0xFF   ;Define la parte superior de la pila
@@ -164,3 +167,4 @@ delay:
     JNZ .delayLoop  ;Repite hasta que C sea 0
     POP C           ;Restaura el registro C
     RET             ;Retorna de la subrutina
+
