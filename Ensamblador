@@ -1,41 +1,166 @@
-# ; vs 1.0.0
-
+;#VS 1.01
 JMP boot
 
-stackTop    EQU 0xFF    
-txtDisplay  EQU 0x2E0
+stackTop    EQU 0xFF   ;Define la parte superior de la pila
+txtDisplay  EQU 0x2E0  ;Direccion de la pantalla de texto
+vslDisplay  EQU 0x300  ;Direccion de la pantalla visual
 
-hello:      DB "Primera programación ensamblador"  
-            DB 0                
+hello:      DB "Primera Programacion Ensambladora." ;Mensaje Mostrado  
+            DB 0           ;Terminador de cadena     
 
+sprite1:    ;Definicion de la imagen del primer sprite
+	DB "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+    DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+    DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+    DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+	DB "\xFF\xF0\xF0\xFF\xFF\xFF\xFF\xFF"
+    DB "\xFF\xF0\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+    
+
+sprite2:      ;Definicion del segundo sprite
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+    DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+    DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+    DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+	DB "\xFF\xFF\xF0\xF0\xFF\xFF\xFF\xFF"
+    DB "\xFF\xFF\xF0\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+    
+sprite3:       ;Definicion del tercer sprite
+    DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+    DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+    DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+    DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+	DB "\xFF\xFF\xFF\xF0\xF0\xFF\xFF\xFF"
+    DB "\xFF\xFF\xFF\xF0\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+
+sprite4:          ;Definicion del tercer sprite
+    DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+    DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+    DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+    DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+    DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+	DB "\xFF\xFF\xFF\xFF\xF0\xF0\xFF\xFF"
+    
 boot:
-    MOV SP, stackTop    
-    MOV C, hello        
-    MOV D, txtDisplay   
-    CALL print
-    HLT                
+    ; Primera parte: Mostrar el mensaje
+    MOV SP, stackTop    ;Inicializa el puntero de pila
+    MOV C, hello        ;C apunta al mensaje de texto
+    MOV D, txtDisplay   ;D apunta a la pantalla de texto
+    CALL print          ;Llama a la subrutina de impresion
+
+    ; Segunda parte: Mostrar los sprites
+    MOV B, 1		; Contador para repetir el bucle 4 veces
+
+.main_loop:
+	MOV C, sprite1		; C points to the first sprite
+	MOV D, vslDisplay	; D points to the fb
+
+.loop1:
+	MOVB AL, [C]	; Print all the pixels of the first sprite
+	MOVB [D], AL
+	INC C
+	INC D
+	CMP D, 0x400		; Stop after filling the first sprite
+	JNZ .loop1
+
+	MOV C, sprite2		; C points to the second sprite
+	MOV D, vslDisplay	; Reset D to the start of the display
+
+.loop2:
+	MOVB AL, [C]	; Print all the pixels of the second sprite
+	MOVB [D], AL
+	INC C
+	INC D
+	CMP D, 0x400		; Stop after filling the second sprite
+	JNZ .loop2
+
+	MOV C, sprite3		; C points to the third sprite
+	MOV D, vslDisplay	; Reset D to the start of the display
+
+.loop3:
+	MOVB AL, [C]	; Print all the pixels of the third sprite
+	MOVB [D], AL
+	INC C
+	INC D
+	CMP D, 0x400		; Stop after filling the third sprite
+	JNZ .loop3
+
+	MOV C, sprite4		; C points to the fourth sprite
+	MOV D, vslDisplay	; Reset D to the start of the display
+
+.loop4:
+	MOVB AL, [C]	; Print all the pixels of the fourth sprite
+	MOVB [D], AL
+	INC C
+	INC D
+	CMP D, 0x400		; Stop after filling the fourth sprite
+	JNZ .loop4
+
+	DEC B			; Decrementar el contador
+	JNZ .main_loop	; Repetir el bucle principal si B no es cero
+
+	HLT             ;Detiene la ejecucion
 
 print:              
-    PUSH A
+    PUSH A          ;Guarda el registro A en la pila
 .loop:
-    MOVB AL, [C]         
-    CMPB AL, 0            
-    JZ .done
-    MOVB [D], AL         
-    INC C
-    INC D
-    CALL delay            
-    JMP .loop
+    MOVB AL, [C]    ;Carga un byte del msj    
+    CMPB AL, 0      ;Compara con el terminador de cadena     
+    JZ .done        ;Si es 0, finaliza
+    MOVB [D], AL    ;Muestra el caracteren pantalla     
+    INC C           ;Avanza en el mensaje
+    INC D           ;Avnaza en la pantalla
+    CALL delay      ;Llama a la subrutina de retardo      
+    JMP .loop       ;Repite hasta el fin del mensaje 
 .done:
-    POP A
-    RET                
+    POP A           ;Restaura el registro A
+    RET             ;Retorna de la subrutina   
 
-; Retardo más corto para evitar bloqueos
 delay:
-    PUSH C
-    MOV C, 0x0050         
+    PUSH C          ;Guarda el registro C en la pila
+    MOV C, 0x005    ;Establece un pequeño retardo     
 .delayLoop:
-    DEC C
-    JNZ .delayLoop
-    POP C
-    RET
+    DEC C           ;Decrementar el contador
+    JNZ .delayLoop  ;Repite hasta que C sea 0
+    POP C           ;Restaura el registro C
+    RET             ;Retorna de la subrutina
